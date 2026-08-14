@@ -125,7 +125,15 @@ GREEN_BR=$'\033[38;5;46m'
 SPINNER=("⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧")
 
 
+# ─────────────────────────────────────────────────────────────────────
+# STATE FILE MIGRATION (gpu-buddy.sh → poppai.sh, one-time)
+# ─────────────────────────────────────────────────────────────────────
 mkdir -p "$POPPAI_DIR"
+for _f in pet_count petted fed last_mood mood_shifts achievement achievements cache_prev gpu_prev; do
+    [ -f "$POPPAI_DIR/buddy_$_f" ] && [ ! -f "$POPPAI_DIR/poppai_$_f" ] \
+        && mv "$POPPAI_DIR/buddy_$_f" "$POPPAI_DIR/poppai_$_f"
+done
+rm -f "$POPPAI_DIR/buddy_hat" 2>/dev/null  # never implemented; gone
 
 # State file paths (single source of truth)
 S_ACTION="$POPPAI_DIR/poppai_action"
