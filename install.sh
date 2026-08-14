@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install PoppAI (or one of the simpler variants) as your Claude Code statusline.
+# Install PoppGPU (or one of the simpler variants) as your Claude Code statusline.
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -17,8 +17,8 @@ done
 HAS_NVITOP=false
 command -v nvitop &>/dev/null && HAS_NVITOP=true
 
-# Pick a variant. Default is PoppAI; --compact and --full select the simpler variants.
-echo "PoppAI installer"
+# Pick a variant. Default is PoppGPU; --compact and --full select the simpler variants.
+echo "PoppGPU installer"
 echo ""
 case "${1:-}" in
     --compact)
@@ -33,18 +33,18 @@ case "${1:-}" in
         VARIANT=full; SRC="$SCRIPT_DIR/statusline.sh"
         echo "Installing full variant (multi-line nvitop graphics)"
         ;;
-    --poppai|"")
-        VARIANT=poppai; SRC="$SCRIPT_DIR/poppai.sh"
-        echo "Installing PoppAI (your terminal flower)"
+    --poppgpu|"")
+        VARIANT=poppgpu; SRC="$SCRIPT_DIR/poppgpu.sh"
+        echo "Installing PoppGPU (your terminal flower)"
         ;;
     *)
         echo "unknown option: $1"
-        echo "usage: ./install.sh [--poppai|--compact|--full]"
+        echo "usage: ./install.sh [--poppgpu|--compact|--full]"
         exit 1
         ;;
 esac
 
-DEST="$CLAUDE_DIR/poppai.sh"
+DEST="$CLAUDE_DIR/poppgpu.sh"
 mkdir -p "$CLAUDE_DIR"
 cp "$SRC" "$DEST"
 chmod +x "$DEST"
@@ -54,7 +54,7 @@ echo "Copied to $DEST"
 if [ -f "$SETTINGS" ]; then
     if jq -e '.statusLine' "$SETTINGS" &>/dev/null; then
         CURRENT=$(jq -r '.statusLine.command // "none"' "$SETTINGS")
-        if [ "$CURRENT" != "~/.claude/poppai.sh" ]; then
+        if [ "$CURRENT" != "~/.claude/poppgpu.sh" ]; then
             echo ""
             echo "Warning: statusLine already configured in $SETTINGS"
             echo "Current: $CURRENT"
@@ -62,18 +62,18 @@ if [ -f "$SETTINGS" ]; then
             echo
             if [[ ! "$REPLY" =~ ^[Yy]$ ]]; then
                 echo "Skipped settings update. To configure manually, add to $SETTINGS:"
-                echo '  "statusLine": {"type": "command", "command": "~/.claude/poppai.sh"}'
+                echo '  "statusLine": {"type": "command", "command": "~/.claude/poppgpu.sh"}'
                 exit 0
             fi
         fi
     fi
-    jq '.statusLine = {"type": "command", "command": "~/.claude/poppai.sh"}' "$SETTINGS" \
+    jq '.statusLine = {"type": "command", "command": "~/.claude/poppgpu.sh"}' "$SETTINGS" \
         > "${SETTINGS}.tmp" && mv "${SETTINGS}.tmp" "$SETTINGS"
 else
-    echo '{"statusLine": {"type": "command", "command": "~/.claude/poppai.sh"}}' | jq . > "$SETTINGS"
+    echo '{"statusLine": {"type": "command", "command": "~/.claude/poppgpu.sh"}}' | jq . > "$SETTINGS"
 fi
 
 echo "Updated $SETTINGS"
 echo ""
-echo "Done. Restart Claude Code to see PoppAI."
-echo "To switch variants later: ./install.sh [--poppai|--compact|--full]"
+echo "Done. Restart Claude Code to see PoppGPU."
+echo "To switch variants later: ./install.sh [--poppgpu|--compact|--full]"

@@ -1,6 +1,6 @@
-# Customizing PoppAI
+# Customizing PoppGPU
 
-PoppAI is one bash script (`poppai.sh`) with a big `CONFIG` block at the top. Most changes are find-the-constant and edit-it. Here's the tour.
+PoppGPU is one bash script (`poppgpu.sh`) with a big `CONFIG` block at the top. Most changes are find-the-constant and edit-it. Here's the tour.
 
 ## Where things live
 
@@ -43,7 +43,7 @@ xterm 256-color cheat sheet: https://www.ditig.com/256-colors-cheat-sheet
 
 ## Change the thresholds
 
-These determine when Poppy looks stressed:
+These determine when the flower looks stressed:
 
 ```bash
 STRAIN_TEMP_CRIT=85       # 'overheat' kicks in when GPU >= this
@@ -52,7 +52,7 @@ STRAIN_CTX_HIGH=75        # context window pressure
 # ... etc
 ```
 
-Lower values = a more anxious Poppy. Higher values = a chill Poppy that only stresses at extremes.
+Lower values = a more anxious flower. Higher values = a chill flower that only stresses at extremes.
 
 ## Add a new achievement
 
@@ -89,11 +89,11 @@ myach)
 
 That's it. The achievement is now in the `status` profile card and contributes to the `ACH X/Y` bar.
 
-## Change Poppy's expression for a mood
+## Change the flower's expression for a mood
 
 Find the case in `FLOWER ART per state` and edit. Each state has 4 lines (F1 petals, F2 face, F3 stem, F4 ground) plus a MOOD label and an IC icon used in the bottom row.
 
-Example — make `idle` Poppy look bored instead of sleepy:
+Example — make the `idle` state look bored instead of sleepy:
 
 ```bash
 idle)
@@ -117,7 +117,7 @@ esac
 
 ## Tune the pet/feed effects
 
-How long should pampering keep Poppy chill?
+How long should pampering keep her chill?
 
 ```bash
 PET_BONUS_SECONDS=300      # 5 minutes of strain relief per pet
@@ -158,28 +158,28 @@ wave)
 Then trigger it from anywhere:
 
 ```bash
-echo wave > ~/.claude/poppai_action
+echo wave > ~/.claude/poppgpu_action
 ```
 
 ## State files reference
 
-PoppAI keeps state in `~/.claude/poppai_*` files (text, one value per file, easy to inspect or reset):
+PoppGPU keeps state in `~/.claude/poppgpu_*` files (text, one value per file, easy to inspect or reset):
 
 | File | Contents |
 |---|---|
-| `poppai_action` | One-shot action queue (consumed on next render) |
-| `poppai_pet_count` | Cumulative number of times pet |
-| `poppai_petted` | Unix timestamp of last pet (strain bonus tracking) |
-| `poppai_fed` | Unix timestamp of last feed |
-| `poppai_last_mood` | Previous state name (for mood-shift counting) |
-| `poppai_mood_shifts` | Total mood transitions over time |
-| `poppai_achievement` | Currently-displayed achievement + unlock timestamp |
-| `poppai_achievements` | One-line-per-achievement unlocked log |
-| `poppai_cache_prev` | Previous tick's page cache % (for `drained` detection) |
-| `poppai_gpu_prev` | Previous tick's GPU % (for `jobdone` detection) |
+| `poppgpu_action` | One-shot action queue (consumed on next render) |
+| `poppgpu_pet_count` | Cumulative number of times pet |
+| `poppgpu_petted` | Unix timestamp of last pet (strain bonus tracking) |
+| `poppgpu_fed` | Unix timestamp of last feed |
+| `poppgpu_last_mood` | Previous state name (for mood-shift counting) |
+| `poppgpu_mood_shifts` | Total mood transitions over time |
+| `poppgpu_achievement` | Currently-displayed achievement + unlock timestamp |
+| `poppgpu_achievements` | One-line-per-achievement unlocked log |
+| `poppgpu_cache_prev` | Previous tick's page cache % (for `drained` detection) |
+| `poppgpu_gpu_prev` | Previous tick's GPU % (for `jobdone` detection) |
 
-To wipe Poppy's memory and start fresh: `rm ~/.claude/poppai_*`. To export her achievements as a brag: `cat ~/.claude/poppai_achievements`.
+To wipe her memory and start fresh: `rm ~/.claude/poppgpu_*`. To export her achievements as a brag: `cat ~/.claude/poppgpu_achievements`.
 
 ## Reach further
 
-If your customization gets weird, PoppAI is happy with that. Themes, alternate flowers (sunflower? cactus?), seasonal variants, holiday achievements — open a PR, fork it, whatever.
+If your customization gets weird, PoppGPU is happy with that. Themes, alternate flowers (sunflower? cactus?), seasonal variants, holiday achievements — open a PR, fork it, whatever.

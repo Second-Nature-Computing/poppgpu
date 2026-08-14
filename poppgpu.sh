@@ -1,19 +1,19 @@
 #!/bin/bash
-# PoppAI — your terminal flower for Claude Code
+# PoppGPU — your terminal flower for Claude Code
 # A statusline pet that reacts to GPU, system, and Claude session state.
-# Repo: https://github.com/Second-Nature-Computing/poppai
+# Repo: https://github.com/Second-Nature-Computing/poppgpu
 # License: MIT
 #
-# Trigger actions by writing to ~/.claude/poppai_action:
-#   echo pet    > ~/.claude/poppai_action   # +pet count, brief affection
-#   echo feed   > ~/.claude/poppai_action   # photosynthesis (strain -1 for 10m)
-#   echo dance  > ~/.claude/poppai_action   # sway animation
-#   echo status > ~/.claude/poppai_action   # profile card with achievements
+# Trigger actions by writing to ~/.claude/poppgpu_action:
+#   echo pet    > ~/.claude/poppgpu_action   # +pet count, brief affection
+#   echo feed   > ~/.claude/poppgpu_action   # photosynthesis (strain -1 for 10m)
+#   echo dance  > ~/.claude/poppgpu_action   # sway animation
+#   echo status > ~/.claude/poppgpu_action   # profile card with achievements
 #
 # Everything below is yours to tweak. The CONFIG block has thresholds,
 # colors, and the achievement list. Flower art lives in the FLOWER ART
 # and ACHIEVEMENT ART sections — change a state, add a state, recolor
-# Poppy, the script's structured for it.
+# the flower, the script's structured for it.
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -21,7 +21,7 @@
 # ─────────────────────────────────────────────────────────────────────
 
 # State directory
-POPPAI_DIR="$HOME/.claude"
+POPPGPU_DIR="$HOME/.claude"
 
 # ── Energy thresholds (positive: GPU/CPU activity) ──────────────────
 ENERGY_GPU_BLAZING=90   # → energy 4
@@ -55,7 +55,7 @@ UPT_BAR_DAYS=14          # uptime bar reaches full at this many days
                          # (matches the marathon achievement: 7d = half)
 
 # ── Achievements ────────────────────────────────────────────────────
-ACH_DISPLAY_SECONDS=30   # how long an achievement keeps Poppy's special art
+ACH_DISPLAY_SECONDS=30   # how long an achievement keeps the special art
 ACH_LEET_COST="13.37"    # session cost that triggers the leet achievement
 ACH_BIGJOB_MIB=71680     # 70 GiB GPU memory → bigjob
 ACH_TINYFILES_PCT=80     # inode % on / → tinyfiles
@@ -126,26 +126,28 @@ SPINNER=("⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧")
 
 
 # ─────────────────────────────────────────────────────────────────────
-# STATE FILE MIGRATION (gpu-buddy.sh → poppai.sh, one-time)
+# STATE FILE MIGRATION (gpu-buddy.sh / poppai.sh → poppgpu.sh, one-time)
 # ─────────────────────────────────────────────────────────────────────
-mkdir -p "$POPPAI_DIR"
-for _f in pet_count petted fed last_mood mood_shifts achievement achievements cache_prev gpu_prev; do
-    [ -f "$POPPAI_DIR/buddy_$_f" ] && [ ! -f "$POPPAI_DIR/poppai_$_f" ] \
-        && mv "$POPPAI_DIR/buddy_$_f" "$POPPAI_DIR/poppai_$_f"
+mkdir -p "$POPPGPU_DIR"
+for _pfx in buddy poppai; do
+    for _f in pet_count petted fed last_mood mood_shifts achievement achievements cache_prev gpu_prev; do
+        [ -f "$POPPGPU_DIR/${_pfx}_$_f" ] && [ ! -f "$POPPGPU_DIR/poppgpu_$_f" ] \
+            && mv "$POPPGPU_DIR/${_pfx}_$_f" "$POPPGPU_DIR/poppgpu_$_f"
+    done
 done
-rm -f "$POPPAI_DIR/buddy_hat" 2>/dev/null  # never implemented; gone
+rm -f "$POPPGPU_DIR/buddy_hat" 2>/dev/null  # never implemented; gone
 
 # State file paths (single source of truth)
-S_ACTION="$POPPAI_DIR/poppai_action"
-S_PETS="$POPPAI_DIR/poppai_pet_count"
-S_PETTED="$POPPAI_DIR/poppai_petted"
-S_FED="$POPPAI_DIR/poppai_fed"
-S_LAST_MOOD="$POPPAI_DIR/poppai_last_mood"
-S_MOOD_SHIFTS="$POPPAI_DIR/poppai_mood_shifts"
-S_ACH_NOW="$POPPAI_DIR/poppai_achievement"
-S_ACH_LOG="$POPPAI_DIR/poppai_achievements"
-S_CACHE_PREV="$POPPAI_DIR/poppai_cache_prev"
-S_GPU_PREV="$POPPAI_DIR/poppai_gpu_prev"
+S_ACTION="$POPPGPU_DIR/poppgpu_action"
+S_PETS="$POPPGPU_DIR/poppgpu_pet_count"
+S_PETTED="$POPPGPU_DIR/poppgpu_petted"
+S_FED="$POPPGPU_DIR/poppgpu_fed"
+S_LAST_MOOD="$POPPGPU_DIR/poppgpu_last_mood"
+S_MOOD_SHIFTS="$POPPGPU_DIR/poppgpu_mood_shifts"
+S_ACH_NOW="$POPPGPU_DIR/poppgpu_achievement"
+S_ACH_LOG="$POPPGPU_DIR/poppgpu_achievements"
+S_CACHE_PREV="$POPPGPU_DIR/poppgpu_cache_prev"
+S_GPU_PREV="$POPPGPU_DIR/poppgpu_gpu_prev"
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -272,8 +274,8 @@ SPN=${SPINNER[$((T % 8))]}
 
 # ─────────────────────────────────────────────────────────────────────
 # ACTIONS — one-shot interactions (pet / feed / dance / status)
-# Drop a word into ~/.claude/poppai_action; the file is consumed and
-# the corresponding micro-render replaces Poppy for one statusline tick.
+# Drop a word into ~/.claude/poppgpu_action; the file is consumed and
+# the corresponding micro-render replaces the flower for one statusline tick.
 # ─────────────────────────────────────────────────────────────────────
 
 ACTION=""
@@ -313,7 +315,7 @@ case "$ACTION" in
         _TOT=${#ALL_ACHIEVEMENTS[@]}
 
         printf "${PETAL_RED}┌──────────────────────────────────────┐${RESET}\n"
-        printf "${PETAL_RED}│${RESET}  ${PETAL_MAG}❀${PETAL_RED}❁${PETAL_PNK}✿${PETAL_RED}❁${PETAL_MAG}❀${RESET}  ${BOLD}POPPAI PROFILE${RESET}          ${PETAL_RED}│${RESET}\n"
+        printf "${PETAL_RED}│${RESET}  ${PETAL_MAG}❀${PETAL_RED}❁${PETAL_PNK}✿${PETAL_RED}❁${PETAL_MAG}❀${RESET}  ${BOLD}POPPGPU PROFILE${RESET}          ${PETAL_RED}│${RESET}\n"
         printf "${PETAL_RED}├──────────────────────────────────────┤${RESET}\n"
         printf "${PETAL_RED}│${RESET}  ${LABEL}Mood shifts${RESET}  %-23s ${PETAL_RED}│${RESET}\n" "$_MS"
         printf "${PETAL_RED}│${RESET}  ${LABEL}Times petted${RESET} %-23s ${PETAL_RED}│${RESET}\n" "$_PC"
@@ -337,7 +339,7 @@ esac
 
 # ─────────────────────────────────────────────────────────────────────
 # MOOD COMPUTATION
-# Two internal axes pick Poppy's expression:
+# Two internal axes pick the flower's expression:
 #   ENERGY 0..4  — how much useful work is happening
 #   STRAIN 0..4  — how close any resource is to its limit
 # These are NOT shown directly as bars (the right column is INO/UPT/ACH).

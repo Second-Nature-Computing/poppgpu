@@ -1,6 +1,6 @@
-# Contributing to PoppAI
+# Contributing to PoppGPU
 
-PoppAI is a single bash script that draws a flower. The contribution bar is low. Open a PR.
+PoppGPU is a single bash script that draws a flower. The contribution bar is low. Open a PR.
 
 ## Things that are very welcome
 
@@ -12,7 +12,7 @@ PoppAI is a single bash script that draws a flower. The contribution bar is low.
 
 ## Things to think twice about
 
-- **Adding dependencies.** PoppAI uses bash + `jq` + `nvidia-smi` + maybe `nvitop`. That's it. New deps need a strong reason.
+- **Adding dependencies.** PoppGPU uses bash + `jq` + `nvidia-smi` + maybe `nvitop`. That's it. New deps need a strong reason.
 - **Breaking the four-line layout.** The render is sized to be a comfortable statusline height. If you add a fifth row, it stops fitting on narrow terminals.
 - **Removing customization knobs.** The whole point of the script is that the CONFIG block is editable. Don't hardcode things that used to be variables.
 
@@ -29,21 +29,21 @@ There's no test suite (it's a bash script). To sanity check:
 
 ```bash
 # Render once with a fake Claude session JSON:
-echo '{"model":{"display_name":"Opus 4.7"},"context_window":{"used_percent":63},"total_cost_usd":0.42}' \
-    | ./poppai.sh
+echo '{"model":{"display_name":"Opus 4.7"},"context_window":{"used_percentage":63},"cost":{"total_cost_usd":0.42}}' \
+    | ./poppgpu.sh
 
 # Trigger each action:
-echo pet > ~/.claude/poppai_action
-./poppai.sh < /dev/null
-echo feed > ~/.claude/poppai_action
-./poppai.sh < /dev/null
-echo dance > ~/.claude/poppai_action
-./poppai.sh < /dev/null
-echo status > ~/.claude/poppai_action
-./poppai.sh < /dev/null
+echo pet > ~/.claude/poppgpu_action
+./poppgpu.sh < /dev/null
+echo feed > ~/.claude/poppgpu_action
+./poppgpu.sh < /dev/null
+echo dance > ~/.claude/poppgpu_action
+./poppgpu.sh < /dev/null
+echo status > ~/.claude/poppgpu_action
+./poppgpu.sh < /dev/null
 
 # Force each mood by tweaking the env it reads:
-GPU_UTIL_OVERRIDE=95 ./poppai.sh < /dev/null   # (you'll need to wire this in if testing locally)
+GPU_UTIL_OVERRIDE=95 ./poppgpu.sh < /dev/null   # (you'll need to wire this in if testing locally)
 ```
 
 For achievements that rely on real metrics (GPU temp, page cache, inode count), the easiest test is to set the threshold artificially low in the CONFIG block and run on real hardware.

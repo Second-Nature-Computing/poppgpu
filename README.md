@@ -1,4 +1,4 @@
-# PoppAI
+# PoppGPU
 
 A small flower that lives in your [Claude Code](https://docs.anthropic.com/en/docs/claude-code) statusline and reacts to what your machine is doing.
 
@@ -17,21 +17,21 @@ She lives next to the regular stats. If you don't want her, there are two simple
 
 | Variant | What it is | When to pick it |
 |---|---|---|
-| **PoppAI** (`poppai.sh`) | The flower above, four lines, animated, with 16 achievements | You want a friend |
+| **PoppGPU** (`poppgpu.sh`) | The flower above, four lines, animated, with 16 achievements | You want a friend |
 | **Compact** (`statusline-compact.sh`) | One line: model · ctx bar · cost · GPU bar · top process | You want a statusline, not a friend |
 | **Full** (`statusline.sh`) | Multi-line `nvitop` output stapled to the Claude session header | You want the whole `nvitop` dashboard in your statusline |
 
 ## Install
 
 ```bash
-git clone https://github.com/Second-Nature-Computing/poppai.git
-cd poppai
-./install.sh                  # installs PoppAI by default
+git clone https://github.com/Second-Nature-Computing/poppgpu.git
+cd poppgpu
+./install.sh                  # installs PoppGPU by default
 ./install.sh --compact        # or the compact single-line variant
 ./install.sh --full           # or the full nvitop dashboard
 ```
 
-The installer copies the chosen script to `~/.claude/poppai.sh`, sets `statusLine.command` in `~/.claude/settings.json`, and that's it. Restart Claude Code to see the new statusline.
+The installer copies the chosen script to `~/.claude/poppgpu.sh`, sets `statusLine.command` in `~/.claude/settings.json`, and that's it. Restart Claude Code to see the new statusline.
 
 To switch variants later, run `./install.sh --<variant>` again.
 
@@ -47,19 +47,19 @@ To switch variants later, run `./install.sh --<variant>` again.
 | **7D** | Claude session JSON | Anthropic 7-day rate limit usage |
 | **INO** | `df -i /` | Inode usage on `/`. Hits 100% when something fills the filesystem with tiny files (looking at you, `~/.cache/huggingface`) even if disk space is fine |
 | **UPT** | `/proc/uptime` | Days since reboot. Bar full at 14 days; reboot recommended sometime before that on DGX Spark to clear page-cache fragmentation |
-| **ACH** | `~/.claude/poppai_achievements` | Achievements unlocked / total |
+| **ACH** | `~/.claude/poppgpu_achievements` | Achievements unlocked / total |
 
-The last line is Poppy's mood + your model + the top GPU process. If something's stressing her, you'll see a `(stressor)` tag — `(cch66%)`, `(RAM89%)`, `(ctx91%)` etc.
+The last line is the flower's mood + your model + the top GPU process. If something's stressing her, you'll see a `(stressor)` tag — `(cch66%)`, `(RAM89%)`, `(ctx91%)` etc.
 
 ## Talking to her
 
-You can write a one-word action to `~/.claude/poppai_action` and Poppy will react on her next statusline tick:
+You can write a one-word action to `~/.claude/poppgpu_action` and she will react on her next statusline tick:
 
 ```bash
-echo pet    > ~/.claude/poppai_action   # pet (boosts mood, increments pet count)
-echo feed   > ~/.claude/poppai_action   # photosynthesis (strain -1 for 10 minutes)
-echo dance  > ~/.claude/poppai_action   # 'do a little dance'
-echo status > ~/.claude/poppai_action   # profile card with all 16 achievements
+echo pet    > ~/.claude/poppgpu_action   # pet (boosts mood, increments pet count)
+echo feed   > ~/.claude/poppgpu_action   # photosynthesis (strain -1 for 10 minutes)
+echo dance  > ~/.claude/poppgpu_action   # 'do a little dance'
+echo status > ~/.claude/poppgpu_action   # profile card with all 16 achievements
 ```
 
 Pet her enough and she'll unlock the **needy** achievement.
@@ -89,12 +89,12 @@ Some you'll get the first day. Some take longer. A few are jokes.
 
 ## Customization
 
-PoppAI is one bash script with a big CONFIG block at the top. Everything you'd want to change is there:
+PoppGPU is one bash script with a big CONFIG block at the top. Everything you'd want to change is there:
 
-- **Thresholds** — when does Poppy start to look stressed? `STRAIN_TEMP_HIGH=75` etc.
+- **Thresholds** — when does the flower start to look stressed? `STRAIN_TEMP_HIGH=75` etc.
 - **Colors** — entire palette is named constants. Swap the rainbow for your theme.
 - **Achievement criteria** — every detection rule is a separate line. Add your own.
-- **Flower art** — each mood is a separate `case` block. Change Poppy's face, give her a hat, whatever you want.
+- **Flower art** — each mood is a separate `case` block. Change her face, give her a hat, whatever you want.
 
 See [CUSTOMIZATION.md](./CUSTOMIZATION.md) for a tour of the script with copy-pasteable examples.
 
